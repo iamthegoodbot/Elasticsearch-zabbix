@@ -1,1 +1,1 @@
-UserParameter=ESzabbixlogs[*],/opt/zabbix/externalscripts/ESzabbixlogs.py $1
+UserParameter=ESzabbix_logs[*],/opt/elaticsearch-zabbix/ESzabbix_logs.py $1
