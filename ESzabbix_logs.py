@@ -29,7 +29,7 @@ class LogParser:
     def __init__(self, filename, pos_file):
         self.log_file = filename
         self.pos_file = pos_file
-        self.host = 'elastic'
+        self.host = os.uname()[1]
         self.elastic_metric = defaultdict(
             lambda: {
                 'index': {'count': 0, 'errors': 0, 'req_times': [], 'up_times': []},
