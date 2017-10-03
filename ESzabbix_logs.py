@@ -65,38 +65,38 @@ class LogParser:
         packet = []
         key_template = 'ESZabbix_logs'
         for index, data in self.elastic_metric.items():
-            if index == 'bulk':
+            if index in ['bulk', 'search']:
                 not_empty = True if len(data['index']['req_times']) > 0 else False
                 perc_50 = self.calc_percentile(data['index']['req_times'], 50) if not_empty else 0
                 perc_75 = self.calc_percentile(data['index']['req_times'], 75) if not_empty else 0
                 perc_90 = self.calc_percentile(data['index']['req_times'], 90) if not_empty else 0
                 packet.append(ZabbixMetric(
                     host=self.host,
-                    key='{}[bulk,count]'.format(key_template),
+                    key='{}[{},count]'.format(key_template, index),
                     value=data['index']['count'],
                     clock=timestamp
                 ))
                 packet.append(ZabbixMetric(
                     host=self.host,
-                    key='{}[bulk,errors]'.format(key_template),
+                    key='{}[{},errors]'.format(key_template, index),
                     value=data['index']['errors'],
                     clock=timestamp
                 ))
                 packet.append(ZabbixMetric(
                     host=self.host,
-                    key='{}[bulk,percentile_50]'.format(key_template),
+                    key='{}[{},percentile_50]'.format(key_template, index),
                     value=perc_50,
                     clock=timestamp
                 ))
                 packet.append(ZabbixMetric(
                     host=self.host,
-                    key='{}[bulk,percentile_75]'.format(key_template),
+                    key='{}[{},percentile_75]'.format(key_template, index),
                     value=perc_75,
                     clock=timestamp
                 ))
                 packet.append(ZabbixMetric(
                     host=self.host,
-                    key='{}[bulk,percentile_90]'.format(key_template),
+                    key='{}[{},percentile_90]'.format(key_template, index),
                     value=perc_90,
                     clock=timestamp
                 ))
@@ -241,6 +241,10 @@ class LogParser:
                     self.elastic_metric['bulk']['index']['count'] += 1
                     self.elastic_metric['bulk']['index']['req_times'].append(float(line_params[8][1]))
                     self.elastic_metric['bulk']['index']['up_times'].append(float(line_params[9][1]))
+                elif re.match('\/_search', url):
+                    self.elastic_metric['search']['index']['count'] += 1
+                    self.elastic_metric['search']['index']['req_times'].append(float(line_params[8][1]))
+                    self.elastic_metric['search']['index']['up_times'].append(float(line_params[9][1]))
                 elif re.match('^(\/[^_]{1}\w+[?\/]+)', url):
                     index = re.findall('^\/([^_]{1}\w+)[\/?]{1}', url)[0]
                     if not index:
