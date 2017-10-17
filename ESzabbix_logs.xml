@@ -542,7 +542,7 @@
                         </item_prototype>
                         <item_prototype>
                             <name>ESZabbix_logs refresh errors</name>
-                            <type>2</type>
+                            <type>0</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
@@ -834,7 +834,7 @@
                             <expression>{Elasticsearch Logs:ESZabbix_logs[{#ES_INDEX},refresh,percentile_50].last()} &gt; {$REFRESH_PERC_50}</expression>
                             <recovery_mode>0</recovery_mode>
                             <recovery_expression/>
-                            <name>Elasticsearch Logs {HOST.NAME}	ESZabbix_logs[{#ES_INDEX},refresh,percentile_50] &gt; $1</name>
+                            <name>Elasticsearch Logs 	ESZabbix_logs[{#ES_INDEX},refresh,percentile_50] &gt; $1</name>
                             <correlation_mode>0</correlation_mode>
                             <correlation_tag/>
                             <url/>
