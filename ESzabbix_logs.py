@@ -164,23 +164,32 @@ class LogParser:
                     self.send_data(timestamp)
                     start_time = line_time
                 url = line_params[3][1].split()[1]
+                req_times = map(float,line_params[8][1].split(','))
+                up_times = map(float,line_params[9][1].split(','))
                 if re.match('/_bulk', url):
                     self.elastic_metric['bulk']['index']['count'] += 1
-                    self.elastic_metric['bulk']['index']['req_times'].append(float(line_params[8][1]))
-                    self.elastic_metric['bulk']['index']['up_times'].append(float(line_params[9][1]))
+                    for req_time in req_times:
+                        self.elastic_metric['bulk']['index']['req_times'].append(req_time)
+                    for up_time in up_times:
+                        self.elastic_metric['bulk']['index']['up_times'].append(up_time)
                 elif re.match('^(/[^_]\w+[?/]+)', url):
                     index = re.findall('^/([^_]\w+)[/?]', url)[0]
                     if not index:
                         continue
                     self.elastic_metric[index]['index']['count'] += 1
-                    self.elastic_metric[index]['index']['req_times'].append(float(line_params[8][1]))
+                    for req_time in req_times:
+                        self.elastic_metric[index]['index']['req_times'].append(req_time)
+                    for up_time in up_times:
+                        self.elastic_metric[index]['index']['req_times'].append(up_time)
                     self.elastic_metric[index]['index']['up_times'].append(float(line_params[9][1]))
                     if is_error_code(line_params[4][1]):
                         self.elastic_metric[index]['index']['errors'] += 1
                     if re.match('^(/[^_]?\w+/_refresh)', url):
                         self.elastic_metric[index]['refresh']['count'] += 1
-                        self.elastic_metric[index]['refresh']['req_times'].append(float(line_params[8][1]))
-                        self.elastic_metric[index]['refresh']['up_times'].append(float(line_params[9][1]))
+                        for req_time in req_times:
+                            self.elastic_metric[index]['refresh']['req_times'].append(req_time)
+                        for up_time in up_times:
+                            self.elastic_metric[index]['refresh']['up_times'].append(up_time)
                         if is_error_code(line_params[4][1]):
                             self.elastic_metric[index]['refresh']['errors'] += 1
                 cur_tell = log_file.tell()
