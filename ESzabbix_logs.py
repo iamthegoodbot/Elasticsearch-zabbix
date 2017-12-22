@@ -181,7 +181,7 @@ class LogParser:
                         self.elastic_metric[index]['index']['req_times'].append(req_time)
                     for up_time in up_times:
                         self.elastic_metric[index]['index']['req_times'].append(up_time)
-                    self.elastic_metric[index]['index']['up_times'].append(float(line_params[9][1]))
+
                     if is_error_code(line_params[4][1]):
                         self.elastic_metric[index]['index']['errors'] += 1
                     if re.match('^(/[^_]?\w+/_refresh)', url):
